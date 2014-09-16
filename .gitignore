@@ -1,0 +1,66 @@
+data/
+*.rdb
+*.log
+*.csv
+*.txt
+*.dat
+
+
+/ipython-notebooks/.ipynb_checkpoints/*
+*.ipynb_checkpoints/*
+
+
+# byte-compiled/optimized/dll files
+__pycache__/
+*.py[cod]
+
+# c extensions
+*.so
+*.h
+*.pyx
+
+# distribution/packaging
+.Python
+env/
+bin/
+build/
+develop-eggs/
+dist/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# test output
+.tox/
+.coverage
+.cache
+nosetests.xml
+coverage.xml
+
+# sphinx
+docs/_build/
+
+# file system/OS
+*.DS_Store
+
+# images
+*.png
+*.graffle
+*.jpg
+*.svg
+
+# R infrastructure files
+.Rhistory
+*-Ex.R
+*.Rproj
+.Rproj.user
