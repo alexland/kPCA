@@ -1,4 +1,4 @@
-#!/usr/local/bin/python2.7
+#!/usr/local/bin/python3
 # encoding: utf-8
 
 import os
@@ -51,3 +51,15 @@ def PCA(D, num_eigenvalues=None, EV=0, LDA=0):
     evc = evc[:,idx]
     eva = eva[idx]
     return eva, evc, R
+	
+	
+def eigenvalue_variance_display(eva, num_eigenvalues):
+    eva = eva[:num_eigenvalues]
+    eva = eva/eva.sum()
+    eva_cs = eva.cumsum()
+    s = 'eigenvalue        value%'
+    s1 = '_' * len(s)
+    print(s)
+    print(s1)
+    for i in range(eva.shape[0]):
+        print( '{:^10.3f} {:^20.2f}'.format(eva[i], 100*eva_cs[i]) )
