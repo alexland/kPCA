@@ -9,23 +9,45 @@ from matplotlib import pyplot as MPL
 from mpl_toolkits.mplot3d import Axes3D
 
 
-def pca(data, rescaled_dim=2, normalize=1):
-	"""
-		returns: rescaled 1D vectors (one for each dimension, according to
-		'rescaled_dim'); eivenvectors, and eigenvalues
-		pass in: 'data' (with response variable removed);
-		rescaled_dim, number of dimensions in transformed data
-	"""
-	data -= data.mean(axis=0)
-	data /= data.std(axis=0)
-	C = NP.cov(data.T)		# n x n matrix w/ "1" down main diagonal
-	evals, evecs = LA.eig(C)
-	ndx = NP.argsort(evals)
-	ndx = ndx[::-1]
-	evecs = evecs[:,ndx]		# re-order eigenvectors column-wise
-	evals = evals[ndx]
-	if rescaled_dim > 0 :
-		evecs = evecs[:,:rescaled_dim]
-	x_resc = NP.dot(evecs.T, data.T)			
-	y_resc = NP.dot(evecs, x_resc).T + data.mean(axis=0)
-	return x_resc, y_resc, evals, evecs
+def PCA(D, num_eigenvalues=None, EV=0, LDA=0):
+    '''
+    pass in: 
+        (i) a raw data array--features encoded in the cols;
+            one data instance per row; 
+        (ii) EV, explanatory variable, is included in D as last column;
+        (iii) the LDA flag is set to False so PCA is the default techique;
+            if both LDA & EV are set to True then LDA is performed
+            instead of PCA
+    returns:
+        (i) eigenvalues (1D array);
+        (ii) eigenvectors (2D array)
+        (iii) covariance matrix
+        
+    some numerical assertions:
+    
+    >>> # sum of the eigenvalues is equal to trace of R    
+    >>> x = R.trace()
+    >>> x1 = eva.sum()
+    >>> NP.allclose(x, x1)
+    True
+    
+    >>> # determinant of R is product of eigenvalues
+    >>> q = LA.det(R)
+    >>> q1 = NP.prod(eva)
+    >>> NP.allclose(q, q1)
+    True
+    '''
+    if not (LDA & EV):
+        D, EV = NP.hsplit(D, [-1])
+    # D -= D.mean(axis=0)
+    R = NP.corrcoef(D, rowvar=False)
+    m, n = R.shape
+    if num_eigenvalues:
+        num_eigenvalues = (m - num_eigenvalues, m-1)
+    eva, evc = LA.eigh(R, eigvals=num_eigenvalues)
+    NP.ascontiguousarray(evc)  
+    NP.ascontiguousarray(eva)
+    idx = NP.argsort(eva)[::-1]
+    evc = evc[:,idx]
+    eva = eva[idx]
+    return eva, evc, R
